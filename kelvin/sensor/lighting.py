@@ -1,7 +1,9 @@
 import RPi.GPIO as GPIO
-from collections import namedtuple
 
-LightReport = namedtuple('LightReport', ['is_lighted'])
+
+class LightReport:
+    def __init__(self, is_lighted):
+        self.is_lighted = is_lighted
 
 
 class LightSensor:

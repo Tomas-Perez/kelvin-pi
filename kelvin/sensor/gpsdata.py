@@ -1,8 +1,13 @@
 from threading import Thread
 import gps
-from collections import namedtuple
 
-GpsReport = namedtuple('GpsReport', ['lat', 'lon', 'speed', 'time'])
+
+class GpsReport:
+    def __init__(self, lat, lon, speed, time):
+        self.lat = lat
+        self.lon = lon
+        self.speed = speed
+        self.time = time
 
 
 class GpsPoller(Thread):

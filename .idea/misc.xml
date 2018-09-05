@@ -10,5 +10,5 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6 (kelvin-pi)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.5.3 (sftp://pi@172.22.41.65:22/usr/bin/python3)" project-jdk-type="Python SDK" />
 </project>

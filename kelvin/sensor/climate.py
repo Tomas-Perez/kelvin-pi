@@ -1,9 +1,13 @@
 import Adafruit_DHT
 from threading import Thread
-from collections import namedtuple
 
 DTH_MODEL = 11
-ClimateReport = namedtuple('ClimateReport', ['humidity', 'temperature'])
+
+
+class ClimateReport:
+    def __init__(self, humidity, temperature):
+        self.humidity = humidity
+        self.temperature = temperature
 
 
 class ClimatePoller(Thread):
@@ -18,7 +22,7 @@ class ClimatePoller(Thread):
 
 
 class ClimateSensor:
-    def __init__(self, pin=4):
+    def __init__(self, pin):
         self.poller = ClimatePoller(pin)
         self.poller.start()
 
