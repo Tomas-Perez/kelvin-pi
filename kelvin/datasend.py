@@ -9,7 +9,6 @@ import logging
 
 def publish_data():
     logging.basicConfig(format=LOG_FORMAT, filename=SEND_FILE, level=LOG_LEVEL)
-
     mac = get_mac_address(interface="eth0")
     collection = get_collection()
     logging.info('connected to mongodb on port {}'.format(MONGO_PORT))
@@ -24,7 +23,6 @@ def publish_data():
             report_id = report['_id']
             response = queue.send_dict_as_json({'point': point, 'mac': mac})
             if response:
-                logging.info('message sent')
                 counter += 1
                 collection.update_one({'_id': report_id}, {'$set': {'sent': True}})
             else:

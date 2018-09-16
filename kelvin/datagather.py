@@ -17,7 +17,9 @@ def poll_and_save_reports():
     lighting = LightSensor(pin=LDR_PIN)
     logging.info('reading light sensor on pin {}'.format(LDR_PIN))
     collection = get_collection()
-    logging.info('connected to mongodb on port {}'.format_map(MONGO_PORT))
+    logging.info('connected to mongodb on port {}'.format(MONGO_PORT))
+
+    sensors_running = False
 
     while True:
         gps_report = gps.next_report()
@@ -31,8 +33,11 @@ def poll_and_save_reports():
 
         if not data_point.is_empty():
             collection.insert_one({'point': data_point.__dict__, 'sent': False})
-            logging.info('report stored')
+            if not sensors_running:
+                logging.info('sensors running')
+                sensors_running = True
         else:
+            sensors_running = False
             logging.warning('no data')
 
         time.sleep(GATHER_TIMEOUT)
