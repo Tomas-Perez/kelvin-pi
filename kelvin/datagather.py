@@ -1,15 +1,10 @@
-from sensor.gpsdata import GpsSensor
-from sensor.climate import ClimateSensor
-from sensor.lighting import LightSensor
-from sensor.datapoint import DataPoint
+from sensor import \
+    GpsSensor, ClimateSensor, LightSensor, DataPoint
 from backup import get_collection
-from constants import MONGO_PORT
+from constants import \
+    GPSD_PORT, DTH_PIN, LDR_PIN, MONGO_PORT, GATHER_TIMEOUT
 import time
-
-GPSD_PORT = '2947'
-DTH_PIN = 4
-LDR_PIN = 17
-GATHER_TIMEOUT = 2
+import json
 
 
 def poll_and_save_reports():
@@ -27,7 +22,11 @@ def poll_and_save_reports():
             climate=climate_report,
             light=light_report
         )
-        collection.insert_one({'point': data_point, 'sent': False})
+        print('got {}'.format(data_point))
+        if not data_point.is_empty():
+            collection.insert_one({'point': data_point.__dict__, 'sent': False})
+            print('stored')
+
         time.sleep(GATHER_TIMEOUT)
 
 

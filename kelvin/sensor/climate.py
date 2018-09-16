@@ -9,6 +9,12 @@ class ClimateReport:
         self.humidity = humidity
         self.temperature = temperature
 
+    def __str__(self):
+        return 'ClimateReport(humidity={}%, temperature={}C)'.format(self.humidity, self.temperature)
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class ClimatePoller(Thread):
     def __init__(self, pin):

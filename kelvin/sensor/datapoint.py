@@ -28,6 +28,22 @@ class DataPoint:
             is_lighted=light.is_lighted
         )
 
+    def is_empty(self):
+        return self.coordinates['lat'] is None and \
+               self.coordinates['lon'] is None and \
+               self.time is None and \
+               self.speed is None and \
+               self.humidity is None and \
+               self.temperature is None
+
+    def __str__(self):
+        return 'DataPoint(coordinates={}, time={}, speed={}Km/h, humidity={}%, temperature={}C, is_lighted={})'.format(
+            self.coordinates, self.time, self.speed, self.humidity, self.temperature, self.is_lighted
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class DictEncoder(json.JSONEncoder):
     def default(self, o):

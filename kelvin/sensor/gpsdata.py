@@ -1,6 +1,8 @@
 from threading import Thread
 import gps
 
+REPORT_KEYS = ['lat', 'lon', 'speed', 'time']
+
 
 class GpsReport:
     def __init__(self, lat, lon, speed, time):
@@ -8,6 +10,14 @@ class GpsReport:
         self.lon = lon
         self.speed = speed
         self.time = time
+
+    def __str__(self):
+        return 'GpsReport(lat={}, lon={}, speed={}Km/h, time={})'.format(
+            self.lat, self.lon, self.speed, self.time
+        )
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class GpsPoller(Thread):
@@ -34,12 +44,19 @@ class GpsSensor:
         self.poller.start()
 
     def next_report(self):
-        if self.poller.current_report:
+        temp_dict = dict.fromkeys(REPORT_KEYS)
+        current_report = self.poller.current_report
+        if current_report:
+            for key in REPORT_KEYS:
+                try:
+                    temp_dict[key] = current_report[key]
+                except KeyError:
+                    pass
             return GpsReport(
-                lat=self.poller.current_report.lat,
-                lon=self.poller.current_report.lon,
-                speed=self.poller.current_report.speed,
-                time=self.poller.current_report.time
+                lat=temp_dict['lat'],
+                lon=temp_dict['lon'],
+                speed=temp_dict['speed'],
+                time=temp_dict['time']
             )
         else:
             return GpsReport(None, None, None, None)

@@ -1,4 +1,5 @@
 import boto3
+import json
 
 
 class SQSTransmit:
@@ -14,6 +15,5 @@ class SQSTransmit:
         )
         return response
 
-
-
-
+    def send_dict_as_json(self, a_dict):
+        return self.send_message(json.dumps(a_dict))
