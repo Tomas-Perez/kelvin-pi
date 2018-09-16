@@ -1,16 +1,23 @@
 from sensor import \
     GpsSensor, ClimateSensor, LightSensor, DataPoint
 from backup import get_collection
-from constants import \
-    GPSD_PORT, DTH_PIN, LDR_PIN, MONGO_PORT, GATHER_TIMEOUT
+from config import \
+    GPSD_PORT, DHT_PIN, LDR_PIN, MONGO_PORT, GATHER_TIMEOUT, LOG_FORMAT, GATHER_FILE, LOG_LEVEL
 import time
+import logging
 
 
 def poll_and_save_reports():
+    logging.basicConfig(format=LOG_FORMAT, filename=GATHER_FILE, level=LOG_LEVEL)
+
     gps = GpsSensor(port=GPSD_PORT)
-    climate = ClimateSensor(pin=DTH_PIN)
+    logging.info('reading gpsd on port {}'.format(GPSD_PORT))
+    climate = ClimateSensor(pin=DHT_PIN)
+    logging.info('reading climate sensor on pin {}'.format(DHT_PIN))
     lighting = LightSensor(pin=LDR_PIN)
-    collection = get_collection(port=MONGO_PORT)
+    logging.info('reading light sensor on pin {}'.format(LDR_PIN))
+    collection = get_collection()
+    logging.info('connected to mongodb on port {}'.format_map(MONGO_PORT))
 
     while True:
         gps_report = gps.next_report()
@@ -21,11 +28,12 @@ def poll_and_save_reports():
             climate=climate_report,
             light=light_report
         )
-        print('got {}'.format(data_point))
 
         if not data_point.is_empty():
             collection.insert_one({'point': data_point.__dict__, 'sent': False})
-            print('stored')
+            logging.info('report stored')
+        else:
+            logging.warning('no data')
 
         time.sleep(GATHER_TIMEOUT)
 

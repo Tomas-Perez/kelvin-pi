@@ -1,7 +1,0 @@
-MONGO_PORT = 27017
-GPSD_PORT = '2947'
-DTH_PIN = 4
-LDR_PIN = 17
-GATHER_TIMEOUT = 2
-QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/011354114873/kelvin'
-SEND_TIMEOUT = 10

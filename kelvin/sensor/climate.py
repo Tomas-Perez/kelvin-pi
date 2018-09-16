@@ -1,7 +1,7 @@
 import Adafruit_DHT
 from threading import Thread
 
-DTH_MODEL = 11
+DHT_MODEL = 11
 
 
 class ClimateReport:
@@ -24,7 +24,7 @@ class ClimatePoller(Thread):
 
     def run(self):
         while True:
-            self.current_report = Adafruit_DHT.read_retry(DTH_MODEL, self.pin)
+            self.current_report = Adafruit_DHT.read_retry(DHT_MODEL, self.pin)
 
 
 class ClimateSensor:

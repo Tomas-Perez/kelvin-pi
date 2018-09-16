@@ -1,15 +1,21 @@
 from getmac import get_mac_address
 from backup import get_collection
-from constants import \
-    MONGO_PORT, QUEUE_URL, SEND_TIMEOUT
+from config import \
+    MONGO_PORT, QUEUE_URL, SEND_TIMEOUT, SEND_FILE, LOG_LEVEL, LOG_FORMAT
 from transmit import SQSTransmit
 import time
+import logging
 
 
 def publish_data():
+    logging.basicConfig(format=LOG_FORMAT, filename=SEND_FILE, level=LOG_LEVEL)
+
     mac = get_mac_address(interface="eth0")
-    collection = get_collection(MONGO_PORT)
+    collection = get_collection()
+    logging.info('connected to mongodb on port {}'.format(MONGO_PORT))
     queue = SQSTransmit(QUEUE_URL)
+    logging.info('sending to queue on {}'.format(QUEUE_URL))
+
     while True:
         counter = 0
 
@@ -18,15 +24,15 @@ def publish_data():
             report_id = report['_id']
             response = queue.send_dict_as_json({'point': point, 'mac': mac})
             if response:
-                print('message sent')
+                logging.info('message sent')
                 counter += 1
                 collection.update_one({'_id': report_id}, {'$set': {'sent': True}})
             else:
-                print('no connection, retrying in {} seconds'.format(SEND_TIMEOUT))
+                logging.warning('no connection, retrying in {} seconds'.format(SEND_TIMEOUT))
                 break
 
         if counter > 0:
-            print('sent {} messages'.format(counter))
+            logging.info('sent {} messages'.format(counter))
 
         time.sleep(SEND_TIMEOUT)
 

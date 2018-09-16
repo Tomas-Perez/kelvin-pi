@@ -1,7 +1,8 @@
 from pymongo import MongoClient
+from config import DB, COLLECTION, MONGO_PORT
 
 
-def get_collection(port):
-    client = MongoClient('localhost', port)
-    db = client.kelvin
-    return db.points
+def get_collection():
+    client = MongoClient('localhost', MONGO_PORT)
+    db = client[DB]
+    return db[COLLECTION]
