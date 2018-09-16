@@ -4,7 +4,6 @@ from backup import get_collection
 from constants import \
     GPSD_PORT, DTH_PIN, LDR_PIN, MONGO_PORT, GATHER_TIMEOUT
 import time
-import json
 
 
 def poll_and_save_reports():
@@ -23,6 +22,7 @@ def poll_and_save_reports():
             light=light_report
         )
         print('got {}'.format(data_point))
+
         if not data_point.is_empty():
             collection.insert_one({'point': data_point.__dict__, 'sent': False})
             print('stored')

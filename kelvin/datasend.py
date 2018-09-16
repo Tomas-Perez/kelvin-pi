@@ -12,15 +12,22 @@ def publish_data():
     queue = SQSTransmit(QUEUE_URL)
     while True:
         counter = 0
+
         for report in collection.find({'sent': False}):
             point = report['point']
             report_id = report['_id']
-            queue.send_dict_as_json({'point': point, 'mac': mac})
-            print('message sent')
-            counter += 1
-            collection.update_one({'_id': report_id}, {'$set': {'sent': True}})
+            response = queue.send_dict_as_json({'point': point, 'mac': mac})
+            if response:
+                print('message sent')
+                counter += 1
+                collection.update_one({'_id': report_id}, {'$set': {'sent': True}})
+            else:
+                print('no connection, retrying in {} seconds'.format(SEND_TIMEOUT))
+                break
 
-        print('sent {} messages'.format(counter))
+        if counter > 0:
+            print('sent {} messages'.format(counter))
+
         time.sleep(SEND_TIMEOUT)
 
 

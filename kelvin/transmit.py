@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import EndpointConnectionError
 import json
 
 
@@ -8,11 +9,15 @@ class SQSTransmit:
         self.url = url
 
     def send_message(self, msg):
-        response = self.sqs.send_message(
-            QueueUrl=self.url,
-            DelaySeconds=10,
-            MessageBody=msg
-        )
+        response = None
+        try:
+            response = self.sqs.send_message(
+                QueueUrl=self.url,
+                DelaySeconds=10,
+                MessageBody=msg
+            )
+        except EndpointConnectionError:
+            pass
         return response
 
     def send_dict_as_json(self, a_dict):

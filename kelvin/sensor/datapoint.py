@@ -43,14 +43,3 @@ class DataPoint:
 
     def __repr__(self):
         return self.__str__()
-
-
-class DictEncoder(json.JSONEncoder):
-    def default(self, o):
-        return o.__dict__
-
-
-if __name__ == '__main__':
-    climate_report = ClimateReport(23, 23)
-    report = DataPoint.from_reports(GpsReport(23, 43, 324, 453), climate_report, LightReport(True))
-    print(json.dumps(report, cls=DictEncoder))
