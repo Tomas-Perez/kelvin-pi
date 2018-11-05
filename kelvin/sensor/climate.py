@@ -17,6 +17,9 @@ class ClimateReport:
 
 
 class ClimatePoller(Thread):
+    """
+    Poller that constantly updates with the climate sensor data
+    """
     def __init__(self, pin):
         Thread.__init__(self)
         self.pin = pin
@@ -28,11 +31,18 @@ class ClimatePoller(Thread):
 
 
 class ClimateSensor:
+    """
+    Represents the climate sensor connected on the given pinw
+    """
     def __init__(self, pin):
         self.poller = ClimatePoller(pin)
         self.poller.start()
 
     def next_report(self):
+        """
+        Get a new climate report based on the sensor state
+        :return: climate report
+        """
         if self.poller.current_report:
             humidity, temperature = self.poller.current_report
             return ClimateReport(

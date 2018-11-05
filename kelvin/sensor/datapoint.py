@@ -6,6 +6,10 @@ from sensor.lighting import LightReport
 
 
 class DataPoint:
+    """
+    Wrapper over gps, climate and lighting reports, representing a report on a single geographical point
+    """
+
     def __init__(self, coordinates, time, speed, temperature, humidity, is_lighted):
         self.coordinates = coordinates
         self.time = time
@@ -16,6 +20,13 @@ class DataPoint:
 
     @staticmethod
     def from_reports(gps, climate, light):
+        """
+        Create data point from the given reports
+        :param gps: GPSReport
+        :param climate: ClimateReport
+        :param light: LightReport
+        :return: DataPoint
+        """
         return DataPoint(
             coordinates={
                 'lat': gps.lat,
@@ -29,6 +40,9 @@ class DataPoint:
         )
 
     def is_empty(self):
+        """
+        Checks whether the report has useful data
+        """
         return self.coordinates['lat'] is None and \
                self.coordinates['lon'] is None and \
                self.time is None and \

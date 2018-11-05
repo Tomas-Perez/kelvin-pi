@@ -21,6 +21,9 @@ class GpsReport:
 
 
 class GpsPoller(Thread):
+    """
+    Poller that constantly updates with the gps sensor data
+    """
     def __init__(self, port):
         Thread.__init__(self)
         self.session = gps.gps('localhost', port)
@@ -39,11 +42,18 @@ class GpsPoller(Thread):
 
 
 class GpsSensor:
+    """
+    Represents the GPS sensor connected over the given port, which is running GPSD
+    """
     def __init__(self, port):
         self.poller = GpsPoller(port)
         self.poller.start()
 
     def next_report(self):
+        """
+        Get a new gps report based on the sensor state
+        :return: gps report
+        """
         temp_dict = dict.fromkeys(REPORT_KEYS)
         current_report = self.poller.current_report
         if current_report:

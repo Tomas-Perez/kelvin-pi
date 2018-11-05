@@ -8,6 +8,9 @@ import logging
 
 
 def publish_data():
+    """
+    Send new report to the kelvin SQS Queue
+    """
     logging.basicConfig(format=LOG_FORMAT, filename=SEND_FILE, level=LOG_LEVEL)
     mac = get_mac_address(interface="eth0")
     collection = get_collection()

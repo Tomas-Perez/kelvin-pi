@@ -8,6 +8,9 @@ import logging
 
 
 def poll_and_save_reports():
+    """
+    Poll the sensors and save a report of the current data point
+    """
     logging.basicConfig(format=LOG_FORMAT, filename=GATHER_FILE, level=LOG_LEVEL)
 
     gps = GpsSensor(port=GPSD_PORT)
