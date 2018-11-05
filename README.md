@@ -3,6 +3,8 @@
 Implementation for reading Kelvin IoT device sensors and sending data to Amazon SQS service.
 
 ## How to run
+Have MongoDB and GPSD services running
+
 1. pipenv install
 2. cd kelvin
 3. pipenv run python datagather.py
